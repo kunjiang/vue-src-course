@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <!-- 写模板 -->
+  <div id="root">
+    <div>
+      <div>
+        <p>{{name}}-{{message}}</p>
+      </div>
+    </div>
+    <p>{{name}}</p>
+    <p>{{message}}</p>
+  </div>
+
+  <script>
+
+
+    let rkuohao = /\{\{(.+?)\}\}/g;
+    // 步骤拆解
+    // 1. 拿到模板
+    // 2. 拿到数据 ( data )
+    // 3. 将数据与模板结合, 得到 的是 HTML 元素 ( DOM 元素 )
+    // 4. 放到页面中
+
+    // 1
+    let tmpNode = document.querySelector( '#root' ); // 元素拿到了 模板就是他了
+    // 2
+    let data = {
+      name: '一个新name'
+      , message: '一个消息'
+    };
+
+    // 3. 将数据放到模板中( ??? )
+    //  一般都是使用 递归
+    // 在现在这个案例中 template 是 DOM 元素,
+    // 在真正的 Vue 源码中是 DOM -> 字符串模板 -> VNode -> 真正的 DOM
+    function compiler( template, data ) {
+      let childNodes = template.childNodes; // 取出子元素
+      for ( let i = 0; i < childNodes.length; i++ ) {
+        let type = childNodes[ i ].nodeType; // 1 元素, 3 文本节点
+        if ( type === 3 ) {
+          // 文本节点, 可以判断里面是否有 {{}} 插值
+          let txt = childNodes[ i ].nodeValue; // 该属性只有文本节点才有意义
+
+          // 有没有双花括号??? 
+          txt = txt.replace( rkuohao, function ( _, g ) { // replace 使用正则匹配一次 函数就会被调用一次
+                                                    // 函数的 第 0 个参数 表示匹配到的内容
+                                                    // 函数的 第 n 个参数 表示正则中的 第 n 组
+            let key = g.trim(); // 写在双花括号里面的 东西
+            let value = data[ key ];
+
+            // 将 {{ xxxx }} 用这个 值替换
+            return value;
+          } );
+
+
+          // 注意:  txt 现在和 DOM 元素是没有关系
+          childNodes[ i ].nodeValue = txt;
+        } 
+        else if ( type === 1 ) {
+          // 元素, 考虑它有没有子元素, 是否需要将其子元素进行 判断是否要插值
+          compiler( childNodes[ i ], data );
+        }
+      }
+    }
+
+
+    let generateNode = tmpNode.cloneNode( true ); // 注意这里是 DOM 元素, 可以这么用
+
+    console.log( tmpNode );
+    compiler( generateNode, data );
+    console.log( generateNode );
+
+    // 我们此时是没有生成 新的 template, 所以这里看到的 是直接在页面中就更新的数据, 因为 DOM 是引用类型
+    // 这样做 模板就没有了
+
+    // 4.
+    root.parentNode.replaceChild( generateNode, root );
+
+    // 上面的思路有很大的问题:
+    // 1. Vue 使用的 虚拟 DOM
+    // 2. 只考虑了 单属性 ( {{ name }} ), 而 Vue 中大量的使用层级 ( {{ child.name.firstName }} )
+    // 3. 代码没有整合
+  </script>
+</body>
+</html>
