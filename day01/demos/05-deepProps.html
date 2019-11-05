@@ -9,11 +9,7 @@
 <body>
   <!-- 写模板 -->
   <div id="root">
-    <div>
-      <p>{{name}}-{{message}}</p>
-    </div>
-    <p>{{name}}</p>
-    <p>{{message}}</p>
+    <p>{{ name.firstName }}</p>
   </div>
 
   <script>
@@ -30,6 +26,7 @@
           txt = txt.replace( rkuohao, function ( _, g ) { // replace 使用正则匹配一次 函数就会被调用一次
                                                     // 函数的 第 0 个参数 表示匹配到的内容
                                                     // 函数的 第 n 个参数 表示正则中的 第 n 组
+            // debugger
             let key = g.trim(); // 写在双花括号里面的 东西
             let value = data[ key ];
 
@@ -53,7 +50,7 @@
       this._el = options.el;
 
       // 准备工作 ( 准备模板 )
-      this.$el = this._templateDOM = document.querySelector( this._el );
+      this._templateDOM = document.querySelector( this._el );
       this._parent = this._templateDOM.parentNode;
 
       // 渲染工作
@@ -79,12 +76,32 @@
     let app = new JGVue( {
       el: '#root',
       data: {
-        name: 'jim'
-        , message: 'info'
+        name: {
+          firstName: '张'
+          , lastName: '三峰'
+        }
       }
     } );
 
 
+    // 要解决一个问题:
+    // 使用 'xxx.yyy.zzz' 可以来访问某一个对象
+    // 就是用字符串路径来访问对象的成员
+    function getValueByPath( obj, path ) {
+      let paths = path.split( '.' ); // [ xxx, yyy, zzz ]
+      // 先 取得 obj.xxx, 再取得 结果中的 yyy, 再取得 结果中的 zzz
+      // let res = null;
+      // res = obj[ paths[ 0 ] ];
+      // res = res[ paths[ 1 ] ];
+      // res = res[ paths[ 2 ] ];
+
+      let res = obj;
+      let prop;
+      while( prop = paths.shift() ) {
+        res = res[ prop ];
+      }
+      return res;
+    }
 
   </script>
 </body>

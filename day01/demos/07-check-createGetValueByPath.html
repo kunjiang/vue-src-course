@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 这个函数是在 Vue 编译 模板的时候就生成了
+    function createGetValueByPath( path ) {
+      let paths = path.split( '.' ); // [ xxx, yyy, zzz ]
+      
+      return function getValueByPath( obj ) {
+        let res = obj;
+        let prop;
+        while( prop = paths.shift() ) {
+          res = res[ prop ];
+        }
+        return res;
+      }
+    }
+    let getValueByPath = createGetValueByPath( 'a.b.c.d' );
+
+    var o = {
+      a: {
+        b: {
+          c: {
+            d: {
+              e: '正确了'
+            }
+          }
+        }
+      }
+    };
+
+    var res = getValueByPath( o );
+
+
+    console.log( res );
+    
+  </script>
+</body>
+</html>

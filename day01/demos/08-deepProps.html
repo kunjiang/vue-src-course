@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <!-- 写模板 -->
+  <div id="root">
+    <p>{{ name.firstName }}</p>
+  </div>
+
+  <script>
+    // 要解决一个问题:
+    // 使用 'xxx.yyy.zzz' 可以来访问某一个对象
+    // 就是用字符串路径来访问对象的成员
+    function getValueByPath( obj, path ) {
+      let paths = path.split( '.' ); // [ xxx, yyy, zzz ]
+  
+      let res = obj;
+      let prop;
+      while( prop = paths.shift() ) {
+        res = res[ prop ];
+      }
+      return res;
+    }
+
+    let rkuohao = /\{\{(.+?)\}\}/g;
+    function compiler( template, data ) {
+      let childNodes = template.childNodes; // 取出子元素
+      for ( let i = 0; i < childNodes.length; i++ ) {
+        let type = childNodes[ i ].nodeType; // 1 元素, 3 文本节点
+        if ( type === 3 ) {
+          // 文本节点, 可以判断里面是否有 {{}} 插值
+          let txt = childNodes[ i ].nodeValue; // 该属性只有文本节点才有意义
+
+          // 有没有双花括号??? 
+          txt = txt.replace( rkuohao, function ( _, g ) { // replace 使用正则匹配一次 函数就会被调用一次
+                                                    // 函数的 第 0 个参数 表示匹配到的内容
+                                                    // 函数的 第 n 个参数 表示正则中的 第 n 组
+            // debugger
+            let path = g.trim(); // 写在双花括号里面的 东西
+            let value = getValueByPath( data, path );
+
+            // 将 {{ xxxx }} 用这个 值替换
+            return value;
+          } );
+
+
+          // 注意:  txt 现在和 DOM 元素是没有关系
+          childNodes[ i ].nodeValue = txt;
+        } 
+        else if ( type === 1 ) {
+          // 元素, 考虑它有没有子元素, 是否需要将其子元素进行 判断是否要插值
+          compiler( childNodes[ i ], data );
+        }
+      }
+    }
+    function JGVue( options ) {
+      // 习惯: 内部的数据使用下划线 开头, 只读数据使用 $ 开头
+      this._data = options.data;
+      this._el = options.el;
+
+      // 准备工作 ( 准备模板 )
+      this._templateDOM = document.querySelector( this._el );
+      this._parent = this._templateDOM.parentNode;
+
+      // 渲染工作
+      this.render()
+    }
+    /** 将模板 即 可数据, 得到 HTML 加到页面中 */
+    JGVue.prototype.render = function () {
+      this.compiler();
+    };
+    /** 编译 将 模板与数据结合 得到 真正的 DOM 元素 */
+    JGVue.prototype.compiler = function () {
+      let realHTMLDOM = this._templateDOM.cloneNode( true ); // 用 模板 拷贝 得到 一个 准 DOM
+      compiler( realHTMLDOM, this._data );
+      this.update( realHTMLDOM );
+    }
+    /** 将 DOM 的元素 放到页面中 */
+    JGVue.prototype.update = function ( real ) {
+      this._parent.replaceChild( real, document.querySelector( '#root' ) );
+    }
+
+
+    // 想想怎么用:
+    let app = new JGVue( {
+      el: '#root',
+      data: {
+        name: {
+          firstName: '张'
+          , lastName: '三峰'
+        }
+      }
+    } );
+
+
+   
+
+  </script>
+</body>
+</html>
