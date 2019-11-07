@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    
+    let data = {
+      name: '张三'
+      , age: 19
+      , course: [
+        { name: '语文' },
+        { name: '数学' },
+        { name: '英语' },
+      ]
+    }; // 除了递归还可以使用队列 ( 深度优先转换为广度优先 )
+    // 简化后的版本
+    function defineReactive( target, key, value, enumerable ) {
+      // 函数内部就是一个局部作用域, 这个 value 就只在函数内使用的变量 ( 闭包 )
+
+      if ( typeof value === 'object' && value != null && !Array.isArray( value ) ) {
+        // 是非数组的引用类型
+        reactify( value ); // 递归
+      }
+
+      Object.defineProperty( target, key, {
+        configurable: true,
+        enumerable: !!enumerable,
+
+        get () {
+          console.log( `读取 ${key} 属性` ); // 额外
+          return value;
+        },
+        set ( newVal ) {
+          console.log( `设置 ${key} 属性为: ${newVal}` ); // 额外
+          value = newVal;
+        }
+      } );
+    }
+    // 将对象 o 响应式化
+    function reactify( o ) {
+      let keys = Object.keys( o );
+
+      for ( let i = 0; i < keys.length; i++ ) {
+        let key = keys[ i ]; // 属性名
+        let value = o[ key ];
+        // 判断这个属性是不是引用类型, 判断是不是数组
+        // 如果引用类型就需要递归, 如果不是就不用递归
+        //  如果不是引用类型, 需要使用 defineReactive 将其变成响应式的
+        //  如果是引用类型, 还是需要调用 defineReactive 将其变成响应式的
+        // 如果是数组呢? 就需要循数组, 然后将数组里面的元素进行响应式化
+        if ( Array.isArray( value ) ) {
+          // 数组
+          for ( let j = 0; j < value.length; j++ ) {
+            reactify( value[ j ] ); // 递归
+          }
+        } else {
+          // 对象或值类型
+          defineReactive( o, key, value, true );
+        }
+      }
+    }
+    
+
+    reactify( data );
+  </script>
+</body>
+</html>
