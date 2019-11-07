@@ -137,19 +137,70 @@ render 的作用是将 虚拟 DOM 转换为 真正的 DOM 加到页面中
 - 原生的好多东西都忘记了，不知道从哪学起？
 
 
+# 问题
 
+问题:
+
+- 没明白柯里化怎么就只要循环一次。昨天 讲的 
+  - **缓存一部分行为**
+- mountComponent 这个函数里面的内容 没太理解 ( 具体 )
+- call
+
+
+makeMap( [ 'div', 'p' ] ) 需要遍历这个数据 生成 键值对 
+
+```
+let set = {
+  div: true
+  p: true
+}
+
+set[ 'div' ] // ture
+
+set[ 'Navigator' ] // undefined -> false
+```
+
+但是如果是使用的函数, 每次都需要循环遍历判断是不是数组中的
 
 
 # 响应式原理
+
+- 我们在使用 Vue 时候, 赋值属性获得属性都是直接使用的 Vue 实例
+- 我们在设计属性值的时候, 页面的数据更新
+
+```js
+Object.defineProperty( 对象, '设置什么属性名', {
+  writeable
+  configable
+  enumerable:  控制属性是否可枚举, 是不是可以被 for-in 取出来
+  set() {}  赋值触发
+  get() {}  取值触发
+} )
+```
+
+```js
+// 简化后的版本
+function defineReactive( target, key, value, enumerable ) {
+  // 函数内部就是一个局部作用域, 这个 value 就只在函数内使用的变量 ( 闭包 )
+  Object.defineProperty( target, key, {
+    configurable: true,
+    enumerable: !!enumerable,
+
+    get () {
+      console.log( `读取 o 的 ${key} 属性` ); // 额外
+      return value;
+    },
+    set ( newVal ) {
+      console.log( `设置 o 的 ${key} 属性为: ${newVal}` ); // 额外
+      value = newVal;
+    }
+  } )
+}
+
+```
 
 
 
 
 # 发布订阅模式
-
-
-
-
-
-
 
