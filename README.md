@@ -171,7 +171,7 @@ set[ 'Navigator' ] // undefined -> false
 ```js
 Object.defineProperty( 对象, '设置什么属性名', {
   writeable
-  configable
+  configurable
   enumerable:  控制属性是否可枚举, 是不是可以被 for-in 取出来
   set() {}  赋值触发
   get() {}  取值触发
@@ -240,6 +240,18 @@ let o = {
 2. 重新定义原来的函数
 3. 定义扩展的功能
 4. 调用临时的那个函数
+
+
+扩展数组的 push 和 pop 怎么处理呢???
+
+- 直接修改 prototype **不行**
+- 修改要进行响应式化的数组的原型 ( __proto__ )
+
+已经将对象改成响应式的了. 但是如果直接给对象赋值, 赋值另一个对象, 那么就不是响应式的了, 怎么办? ( 作业 )
+
+// 继承关系: arr -> Array.prototype -> Object.prototype -> ...
+// 继承关系: arr -> 改写的方法 -> Array.prototype -> Object.prototype -> ...
+
 
 
 # 发布订阅模式

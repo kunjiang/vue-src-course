@@ -16,7 +16,8 @@
     let app = new Vue( {
       el: '#root',
       data: {
-        name: '张三'
+        name: '张三',
+        arr: [ { name: '1' } ]
       },
       render: ( createElement ) => {
         // 自定义如何生成虚拟 DOM
