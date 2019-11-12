@@ -249,10 +249,15 @@ let o = {
 
 已经将对象改成响应式的了. 但是如果直接给对象赋值, 赋值另一个对象, 那么就不是响应式的了, 怎么办? ( 作业 )
 
+```
 // 继承关系: arr -> Array.prototype -> Object.prototype -> ...
 // 继承关系: arr -> 改写的方法 -> Array.prototype -> Object.prototype -> ...
+```
+
+
 
 
 
 # 发布订阅模式
+
 
