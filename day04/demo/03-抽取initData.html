@@ -249,7 +249,7 @@
 
           // 模板刷新 ( 这现在是假的, 只是演示 )
           // vue 实例??? watcher 就不会有这个问题
-          that.mountComponent();
+          that.mountComponent(); // 写死了
 
         }
       } );
@@ -320,6 +320,9 @@
 
     let app = new JGVue( {
       el: '#root',
+      components: [
+
+      ],
       data: {
         name: '张三'
         , age: 19

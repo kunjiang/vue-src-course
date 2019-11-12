@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <button id="btn">click</button>
+
+  <script>  
+  
+    var btn = document.querySelector( '#btn' );
+
+
+    // // 注册
+    // btn.addEventListener( 'click', function() { 
+    //   console.log( '点击了' );
+    // } );
+  
+    // // 移除
+    // btn.removeEventListener( 'click', function() { 
+    //   console.log( '点击了' );
+    // } );
+
+    // // 是不是移除了呢???
+
+
+
+    // 如果想要可移除
+    function handler() {
+      console.log( '一个可移除的事件处理函数' );
+    }
+
+    btn.addEventListener( 'click', handler );
+
+    // btn.removeEventListener( 'click', handler );
+  </script>
+</body>
+</html>
