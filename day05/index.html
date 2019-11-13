@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <div id="root">
+    <div class="c1">
+      <div title="tt1" id="id">{{ name }}</div>
+      <div title="tt2">{{ age }}</div>
+      <div title="tt3">{{ gender }}</div>
+      <ul>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+      </ul>
+    </div>
+  </div>
+  <script src="./src/vnode.js"></script>
+  <script src="./src/compiler.js"></script>
+  <script src="./src/jgvue.js"></script>
+  <script src="./src/initrender.js"></script>
+  <script src="./src/initdata.js"></script>
+  <script>
+    
+    let app = new JGVue( {
+      el: '#root',
+      data: {
+        name: '张三',
+        age: 40,
+        gender: '男',
+        children: [ 
+          { name: '张小一', age: 9, gender: '男' },
+          { name: '张小二', age: 6, gender: '女' },
+          { name: '张小三', age: 3, gender: '男' },
+        ]
+      }
+    } );
+  
+  </script>
+</body>
+</html>
