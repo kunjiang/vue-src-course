@@ -10,7 +10,9 @@ JGVue.prototype.mountComponent = function () {
   let mount = () => { // 这里是一个函数, 函数的 this 默认是全局对象 "函数调用模式"
     this.update(this.render())
   }
-  mount.call(this); // 本质应该交给 watcher 来调用, 但是还没有讲到这里
+  
+
+  new Watcher( this, mount ); // 相当于这里调用了 mount
 }
 
 // 这里是生成 render 函数, 目的是缓存 抽象语法树 ( 我们使用 虚拟 DOM 来模拟 )

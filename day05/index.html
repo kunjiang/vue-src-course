@@ -19,6 +19,7 @@
       </ul>
     </div>
   </div>
+  <script src="./src/watcher.js"></script>
   <script src="./src/vnode.js"></script>
   <script src="./src/compiler.js"></script>
   <script src="./src/jgvue.js"></script>
@@ -36,8 +37,24 @@
           { name: '张小一', age: 9, gender: '男' },
           { name: '张小二', age: 6, gender: '女' },
           { name: '张小三', age: 3, gender: '男' },
-        ]
+        ],
+        a : {
+          b: {
+            c: 'jim'
+          }
+        }
+      },
+
+      computed:{
+        // 计算属性也是响应式的 ( watcher )
+      },
+
+      watch: {
+        // 监听什么属性, 这个属性是支持路径语法
+        // 也是使用 watcher 实现
+        // 'a.b.c': ( oldV, newV ) {  }
       }
+
     } );
   
   </script>
