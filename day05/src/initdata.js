@@ -31,8 +31,6 @@ ARRAY_METHOD.forEach(method => {
 
 // 简化后的版本 
 function defineReactive(target, key, value, enumerable) {
-  // 折中处理后, this 就是 Vue 实例
-  let that = this;
 
   // 函数内部就是一个局部作用域, 这个 value 就只在函数内使用的变量 ( 闭包 )
   if ( typeof value === 'object' && value != null ) {
@@ -40,31 +38,33 @@ function defineReactive(target, key, value, enumerable) {
     observe(value); // 递归
   }
 
+  let dep = new Dep();
+
   Object.defineProperty(target, key, {
     configurable: true,
     enumerable: !!enumerable,
 
     get() {
-      console.log(`读取 ${key} 属性`); // 额外
+      // console.log(`读取 ${key} 属性`); // 额外
+      // 依赖收集 ( 暂时略 )
       return value;
     },
     set(newVal) {
-      console.log(`设置 ${key} 属性为: ${newVal}`); // 额外
+      // console.log(`设置 ${key} 属性为: ${newVal}`); // 额外
+      
+      if ( value === newVal ) return;
+
 
       // 目的
       // 将重新赋值的数据变成响应式的, 因此如果传入的是对象类型, 那么就需要使用 observe 将其转换为响应式
       if (typeof newVal === 'object' && newVal != null) {
         observe(newVal);
       } 
-      
+    
       value = newVal;
       
-      // 模板刷新 ( 这现在是假的, 只是演示 )
-      // vue 实例??? watcher 就不会有这个问题
-      typeof that.mountComponent === 'function' && that.mountComponent();
-      // 临时: 数组现在没有参与页面的渲染
-      // 所以在数组上进行响应式的处理, 不需要页面的刷新
-      // 那么 即使 这里无法调用也没有关系
+      // 派发更新, 找到全局的 watcher, 调用 update
+      dep.notify();
     }
   });
 }
@@ -87,13 +87,13 @@ function proxy(target, prop, key) {
 
 
 /** 将对象 o 变成响应式, vm 就是 vue 实例, 为了在调用时处理上下文 */
-function observe( obj, vm ) {
+function observe( obj ) {
   // 之前没有对 obj 本身进行操作, 这一次就直接对 obj 进行判断
   if ( Array.isArray( obj ) ) {
     // 对其每一个元素处理
     obj.__proto__ = array_methods;
     for ( let i = 0; i < obj.length; i++ ) {
-      observe( obj[ i ], vm ); // 递归处理每一个数组元素
+      observe( obj[ i ] ); // 递归处理每一个数组元素
       // 如果想要这么处理, 就在这里继续调用 defineRective
       // defineReactive.call( vm, obj, i, obj[ i ], true ); 
     }
@@ -102,7 +102,7 @@ function observe( obj, vm ) {
     let keys = Object.keys( obj );
     for ( let i = 0; i < keys.length; i++ ) {
       let prop = keys[ i ]; // 属性名
-      defineReactive.call( vm, obj, prop, obj[ prop ], true );
+      defineReactive( obj, prop, obj[ prop ], true );
     }
   }
 }
@@ -113,7 +113,7 @@ JGVue.prototype.initData = function () {
   let keys = Object.keys(this._data);
 
   // 响应式化
-  observe( this._data, this );
+  observe( this._data );
 
   // 代理
   for (let i = 0; i < keys.length; i++) {
