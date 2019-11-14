@@ -8,11 +8,12 @@ JGVue.prototype.mount = function () {
 JGVue.prototype.mountComponent = function () {
   // 执行 mountComponent() 函数 
   let mount = () => { // 这里是一个函数, 函数的 this 默认是全局对象 "函数调用模式"
+    console.log( '渲染了' )
     this.update(this.render())
   }
   
   // 这个 Watcher 就是全局的 Watcher, 在任何一个位置都可以访问他了 ( 简化的写法 )
-  Dep.target = new Watcher( this, mount ); // 相当于这里调用了 mount
+  new Watcher( this, mount ); // 相当于这里调用了 mount
 }
 
 // 这里是生成 render 函数, 目的是缓存 抽象语法树 ( 我们使用 虚拟 DOM 来模拟 )
@@ -39,4 +40,5 @@ JGVue.prototype.update = function (vnode) {
   this._parent.replaceChild(realDOM, document.querySelector('#root'));
   // 这个算法是不负责任的: 
   // 每次会将页面中的 DOM 全部替换
+  
 }

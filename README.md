@@ -531,4 +531,14 @@ Watcher 会有一些方法:
 
 subs 中存储的是 **知道要渲染什么属性的 watcher**
 
-# Observer 对象
+
+
+
+
+
+
+
+# 梳理 Watcher 与 Dep 与属性的关系
+
+假设: 有三个属性 name, age, gender. 页面将三个属性渲染出来
+

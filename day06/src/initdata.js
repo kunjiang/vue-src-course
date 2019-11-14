@@ -40,6 +40,8 @@ function defineReactive(target, key, value, enumerable) {
 
   let dep = new Dep();
 
+  dep.__propName__ = key;
+
   Object.defineProperty(target, key, {
     configurable: true,
     enumerable: !!enumerable,
@@ -47,6 +49,8 @@ function defineReactive(target, key, value, enumerable) {
     get() {
       // console.log(`读取 ${key} 属性`); // 额外
       // 依赖收集 ( 暂时略 )
+      dep.depend();
+
       return value;
     },
     set(newVal) {
