@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <div id="root">
+    <div style="border: 1px dashed blue; padding: 10px;">
+      <div>
+        <com-1/>
+      </div>
+      <div>
+        <p>名字是: {{ topName }}</p>
+        <p>其他属性: {{ topOther }}</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="../../node_modules/vue/dist/vue-jk.js"></script>
+  <script>
+
+    // 创建另外一个组件
+    Vue.component( 'com-1', {
+      template: `
+        <div style="border: 1px dashed red; padding: 10px;">
+          <p>{{ secondName }}</p>  
+
+          <button @click="fn">按钮</button>
+        </div>
+      `,
+      data() {
+        return {
+          secondName: '子组件的名字'
+        }
+      },
+      methods: {
+        fn() {
+          // 在点击按钮的时候触发更新
+          // 组件是自治的, 因此修改的应该是当前子组件的数据
+          // 更新的时候应该也只会更新子组件的数据
+          this.secondName = Math.random() + '';
+        }
+      }
+    } )
+
+  
+    let app = new Vue( {
+      el: '#root',
+      data: {
+        topName: '顶级组件的 name',
+        topOther: '其他属性'
+      }
+    } )
+  </script>
+</body>
+</html>
