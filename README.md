@@ -487,3 +487,8 @@ Watcher 会有一些方法:
 该对象提供 依赖收集 ( depend ) 的功能, 和 派发更新 ( notify ) 的功能
 
 在 notify 中去调用 watcher 的 update 方法
+
+
+
+# Watcher 与 Dep
+
