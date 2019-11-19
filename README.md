@@ -541,6 +541,93 @@ subs 中存储的是 **知道要渲染什么属性的 watcher**
 
 # flow 的基本用法
 
+flow 本身 只是一个 静态的 语法 检查工具
+
+优势:
+
+1. 足够简单, 合适使用
+2. **可以为已有的项目, 进行优化**
+3. 为 ts 可以做一个铺垫
+
+准备使用: 
+
+用法: 
+
+1. 使用命令行工具
+   - 编写代码, 执行命令检查如果有问题 则提示, 没问题跳过 ( 和传统编译型语言 非常类似 )
+2. 使用 IDE 插件 ( 推荐 )
+   - 所见即所得
+  
+
+安装的内容
+
+1. flow-bin 它就是 flow 的静态类型检查工具 ( 主程序 ).
+2. 编译器 ( compiler ), 例如 flow-remove-types, 将类型的语法结构删除掉, 还原成 纯 js 的文件.
+
+
+```js
+// note
+// flow 是一个静态类型的检查工具
+// 给 js 增加了 类型
+
+// 在变量的名字后面 跟上 `:类型名`
+
+// 在使用的 需要在文件一开始的时候使用注释 
+// 使用这个注释是告诉 flow 工具 需要检查这个文件, 如果不使用这个注释 flow 工具就会忽略该文件
+
+// @flow
+
+/* @flow */
+```
+
+
+## flow 命令行工具的用法
+
+首先需要安装软件
+
+```sh
+$ npm i flow-bin flow-remove-types
+```
+
+编写代码
+
+1. 代码中添加 一个 注释 `// @flow ` 或者 `/* @flow */` 
+2. 在运行 flow 之前, 使用 `npx flow init` 初始化
+
+检查代码
+
+```sh
+$ npx flow
+```
+
+注意: `npx` 是 node 工具, 是为了使用项目文件夹下 node_modules 中的可执行程序的工具
+
+## flow-remove-types
+
+将代码转换为纯 js 的代码
+
+```sh
+npx flow-remove-types 源文件 -d 生成的文件
+```
+
+一般会将该命令配置 到 package.json 文件中
+
+
+## 使用 IDE 插件
+
+> 补充一下: 第一次打开 flow 代码的时候, VS CODE 会下滑红色波浪线
+
+推荐使用 flow language support 这个插件 ( VS Code 编辑器 )
+
+
+
+## Vue 源码说明
+
+.flowconfig 中
+
+module.name_mapper='^sfc/\(.*\)$' -> '<PROJECT_ROOT>/src/sfc/\1'
+
+的含义是将 代码中 from 后面导入模块使用的路径 `sfc/xxx/aa` 映射到 `项目根目录/src/sfc/xxx/aa`
 
 
 # rollup 的基本用法
