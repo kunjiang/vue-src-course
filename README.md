@@ -541,6 +541,8 @@ subs 中存储的是 **知道要渲染什么属性的 watcher**
 
 # flow 的基本用法
 
+> https://flow.org/
+
 flow 本身 只是一个 静态的 语法 检查工具
 
 优势:
@@ -631,5 +633,37 @@ module.name_mapper='^sfc/\(.*\)$' -> '<PROJECT_ROOT>/src/sfc/\1'
 
 
 # rollup 的基本用法
+
+> https://www.rollupjs.com/
+
+注意:
+
+1. 版本, 生成文件的版本
+2. 使用模块化的语法是 ES6 语法 ( http://es6.ruanyifeng.com/#docs/module )
+
+使用 
+
+1. 安装 ( 局部 安装 )
+2. rollup 源文件的路径 --file 生成文件的路径 --format umd --name 生成的库的名字
+
+
+
+
+面试题:
+
+```js
+let params = 'a=b&c=d&e=f';
+
+// params.split( '&' ).reduce( (res, v) => {
+//   let kv = v.split( '=' );
+//   res[ kv[ 0 ] ] = kv[ 1 ];
+//   return res;
+// }, {} );
+
+let t = null;
+params.split( '&' ).reduce( ( res, v ) => ( t = v.split( '=' ), res[ t[ 0 ] ] = t[ 1 ], res ), {} );
+
+```
+
 
 
