@@ -10,14 +10,19 @@ import { initLifecycle, callHook } from './lifecycle'
 import { initProvide, initInjections } from './inject'
 import { extend, mergeOptions, formatComponentName } from '../util/index'
 
+
+// 在 Vue 的源码中每一个类型的实例 都会有一个 唯一标识
 let uid = 0
 
 export function initMixin (Vue: Class<Component>) {
+
   Vue.prototype._init = function (options?: Object) {
+    /** Vue 实例 */
     const vm: Component = this
     // a uid
     vm._uid = uid++
 
+    // 测试性能用的, 略
     let startTag, endTag
     /* istanbul ignore if */
     if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
@@ -69,6 +74,7 @@ export function initMixin (Vue: Class<Component>) {
       vm.$mount(vm.$options.el)
     }
   }
+
 }
 
 export function initInternalComponent (vm: Component, options: InternalComponentOptions) {

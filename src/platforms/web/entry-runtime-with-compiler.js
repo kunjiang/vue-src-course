@@ -7,9 +7,14 @@ import config from 'core/config'
 import { warn, cached } from 'core/util/index'
 import { mark, measure } from 'core/util/perf'
 
+/** Vue 构造函数 */
 import Vue from './runtime/index'
 import { query } from './util/index'
+
+/** 是用来生成 render 的工具方法 */
 import { compileToFunctions } from './compiler/index'
+
+
 import { shouldDecodeNewlines, shouldDecodeNewlinesForHref } from './util/compat'
 
 const idToTemplate = cached(id => {
