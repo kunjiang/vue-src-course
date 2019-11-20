@@ -22,56 +22,54 @@ export function initMixin (Vue: Class<Component>) {
     // a uid
     vm._uid = uid++
 
-    // 测试性能用的, 略
-    let startTag, endTag
-    /* istanbul ignore if */
-    if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
-      startTag = `vue-perf-start:${vm._uid}`
-      endTag = `vue-perf-end:${vm._uid}`
-      mark(startTag)
-    }
-
     // a flag to avoid this being observed
     vm._isVue = true
+
     // merge options
     if (options && options._isComponent) {
+      // 开始进行源码分析, 一般都是使用简单的 Vue 实例, 这里是针对组件, 暂时略
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
       // internal component options needs special treatment.
       initInternalComponent(vm, options)
     } else {
-      vm.$options = mergeOptions(
+      vm.$options = mergeOptions(     // mergeOptions 可以简单的理解为合并, 为我们的 options 增加属性
         resolveConstructorOptions(vm.constructor),
         options || {},
         vm
       )
     }
+
     /* istanbul ignore else */
     if (process.env.NODE_ENV !== 'production') {
       initProxy(vm)
     } else {
       vm._renderProxy = vm
     }
+
+
     // expose real self
     vm._self = vm
-    initLifecycle(vm)
-    initEvents(vm)
-    initRender(vm)
-    callHook(vm, 'beforeCreate')
-    initInjections(vm) // resolve injections before data/props
-    initState(vm)
-    initProvide(vm) // resolve provide after data/props
-    callHook(vm, 'created')
 
-    /* istanbul ignore if */
-    if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
-      vm._name = formatComponentName(vm, false)
-      mark(endTag)
-      measure(`vue ${vm._name} init`, startTag, endTag)
-    }
+    initLifecycle(vm)                 // 初始化生命周期的 一些状态变量
+    initEvents(vm)                    // 初始化事件的 容器
+    initRender(vm)                    // 初始化创建元素的方法
+    callHook(vm, 'beforeCreate')      // 调用生命周期函数
+    initInjections(vm) // resolve injections before data/props // 初始化注入器 略
+    initState(vm)                     // 重点, 初始化状态数据 ( data, property 等 )
+    initProvide(vm) // resolve provide after data/props // 略
+    callHook(vm, 'created')           // 生命周期函数的调用
+
+    // 前面的代码是组件的创建
+    // let app = new Vue( ... )
+    // app.$mount( ... )
 
     if (vm.$options.el) {
-      vm.$mount(vm.$options.el)
+      vm.$mount(vm.$options.el) // 组件的挂载, 将组件 挂载 到 el 描述的元素上
+      // 会先调用 扩展的 那个 $mount 方法, 生成 render
+      // 再调用 原始的 $mount 方法, 获得元素, 再调用 mountComponent 方法
+      // 这两个方法都定义在 platforms/web 里面
+
     }
   }
 
