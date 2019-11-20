@@ -667,3 +667,9 @@ params.split( '&' ).reduce( ( res, v ) => ( t = v.split( '=' ), res[ t[ 0 ] ] = 
 
 
 
+# vue 源码解读
+
+
+1. 各个文件夹的作用
+2. Vue 的初始化流程
+
