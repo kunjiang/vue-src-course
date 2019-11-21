@@ -34,15 +34,14 @@ export default class Dep {
     }
   }
 
+  /** 
+   * 每一个属性 都会包含一个 dep 实例
+   * 这个 dep 实例会记录下 参与计算或渲染的 watcher
+   */
   notify () {
     // stabilize the subscriber list first
     const subs = this.subs.slice()
-    if (process.env.NODE_ENV !== 'production' && !config.async) {
-      // subs aren't sorted in scheduler if not running async
-      // we need to sort them now to make sure they fire in correct
-      // order
-      subs.sort((a, b) => a.id - b.id)
-    }
+    
     for (let i = 0, l = subs.length; i < l; i++) {
       subs[i].update()
     }

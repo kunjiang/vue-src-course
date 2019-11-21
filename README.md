@@ -687,3 +687,44 @@ params.split( '&' ).reduce( ( res, v ) => ( t = v.split( '=' ), res[ t[ 0 ] ] = 
 6. shared 公共工具, 方法
 
 
+# 主要内容
+
+1. vue 源码 
+   1. Observer
+   2. watch 和 computed
+   3. 简单的说明一下 patch
+
+![](assets/2019-11-21-20-38-45.png)
+
+observer 文件夹中各个文件的作用
+
+- array.js  创建含有重写 数组方法的数组, 让所有的 响应式数据数组继承自 该数组
+- dep.js Dep 类
+- index.js Observer 类, observe 的工厂函数.
+- scheduler.js vue 中的 任务调度的工具, watcher 执行的核心
+- traverse.js 递归遍历响应式数据. 目的是触发依赖收集.
+- watcher.js Watcher 类
+
+
+面试题: 对数组去重
+
+```js
+
+let arr = [ 1, 1, 1, 2, 2, 3, 3, 3 ]; // => [ 1, 2, 3 ]
+
+// 一般的做法
+// let newarr = [];
+// arr.forEach( v => newarr.indexOf( v ) === -1 && newarr.push( v ) ); // indexOf 原本隐含着循环
+
+// 利用 集合 来简化实现 ( ES6 Set )
+let _set = {};
+let _newarr = [];
+arr.forEach( v => _set[ v ] || ( _set[ v ] = true, _newarr.push( v ) ) ) // 减少赋值行为
+// Object.kyes( _set ) // 获得去重后的数组
+
+// { 1: true }
+// { 1: true, 2: true }
+
+// 在网络中有一个终极的算法, 就是如何 "判同"
+
+```

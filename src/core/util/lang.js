@@ -17,6 +17,10 @@ export function isReserved (str: string): boolean {
 
 /**
  * Define a property.
+ * 
+ * 使用参数, 将 可枚举性变成可控. 递归时, 使用 循环获得 key 的时候, 不可枚举的是访问不到的.
+ * 
+ * 在 vue 中实例存在大量的循环引用, 在递归遍历对象成员的时候, 避免了 死递归.
  */
 export function def (obj: Object, key: string, val: any, enumerable?: boolean) {
   Object.defineProperty(obj, key, {

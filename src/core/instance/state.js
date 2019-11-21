@@ -121,8 +121,10 @@ function initProps (vm: Component, propsOptions: Object) {
 
 function initData (vm: Component) {
   let data = vm.$options.data
+
+  /** 将 data 挂载到 实例的 _data 上 */
   data = vm._data = typeof data === 'function'
-    ? getData(data, vm)
+    ? getData(data, vm) // 将函数调用一下, 获得函数的返回值
     : data || {}
   if (!isPlainObject(data)) {
     data = {}
@@ -134,11 +136,14 @@ function initData (vm: Component) {
   }
   // proxy data on instance
   const keys = Object.keys(data)
+
   const props = vm.$options.props
   const methods = vm.$options.methods
   let i = keys.length
   while (i--) {
     const key = keys[i]
+
+    /** 这里判断只是为了避免 props, data, method 等数据发生冲突, 同名的问题 */
     if (process.env.NODE_ENV !== 'production') {
       if (methods && hasOwn(methods, key)) {
         warn(
@@ -154,11 +159,13 @@ function initData (vm: Component) {
         vm
       )
     } else if (!isReserved(key)) {
+
       proxy(vm, `_data`, key) // 循环了 data 的所有属性, 映射到 Vue 实例上, 
                               // 就必须要使用 app._data.xxx 来访问
                               // 而是使用 app.xxx 来方法
     }
   }
+  
   // observe data
   observe(data, true /* asRootData */) // 响应式化
 }
