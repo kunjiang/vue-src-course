@@ -1,0 +1,14 @@
+{
+  "name": "tojson",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "rollup src/index.js --file dist/bundle.js --format umd --name toJSON --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "rollup": "^1.25.2"
+  }
+}
