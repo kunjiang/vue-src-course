@@ -258,6 +258,7 @@ export function defineComputed (
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
 
+// 浏览器中触发的情况, 里面会对数据的访问关联一个 watcher
 function createComputedGetter (key) {
   return function computedGetter () {
     const watcher = this._computedWatchers && this._computedWatchers[key]
@@ -273,6 +274,7 @@ function createComputedGetter (key) {
   }
 }
 
+// 服务端渲染的时候触发, 里面直接计算不会涉及到 watcher 处理
 function createGetterInvoker(fn) {
   return function computedGetter () {
     return fn.call(this, this)

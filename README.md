@@ -728,3 +728,10 @@ arr.forEach( v => _set[ v ] || ( _set[ v ] = true, _newarr.push( v ) ) ) // 减�
 // 在网络中有一个终极的算法, 就是如何 "判同"
 
 ```
+
+
+面试题:
+
+- 不使用 JSON.stringify 实现将 对象转换为 JSON 格式的字符串
+
+

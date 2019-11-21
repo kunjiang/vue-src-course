@@ -6,24 +6,38 @@ import { callHook, activateChildComponent } from '../instance/lifecycle'
 
 import {
   warn,
-  nextTick,
+  nextTick, // vue 不同的版本号 实现是不一样的, process.nextTick, 但是浏览器不支持的, Promise.resolve 来代替
+            // 降级后, 使用 setTImeout 来模拟
   devtools,
   inBrowser,
   isIE
 } from '../util/index'
 
+
+
 export const MAX_UPDATE_COUNT = 100
 
+// watcher 队列, 简单理解为 事件队列
 const queue: Array<Watcher> = []
+
+
 const activatedChildren: Array<Component> = []
 let has: { [key: number]: ?true } = {}
 let circular: { [key: number]: number } = {}
+
+/** 异步的触发没有开始, 类比 setTimeout 还没有执行 */
 let waiting = false
+
+/** 开始渲染, 清空队列, 执行队列中的 watcher 的 run */
 let flushing = false
+
+
 let index = 0
 
 /**
  * Reset the scheduler's state.
+ * 
+ * 清空队列
  */
 function resetSchedulerState () {
   index = queue.length = activatedChildren.length = 0
@@ -184,7 +198,10 @@ export function queueWatcher (watcher: Watcher) {
         flushSchedulerQueue()
         return
       }
-      nextTick(flushSchedulerQueue)
+      nextTick(flushSchedulerQueue) // 让任务队列中的 watcher 在 "下一次事件循环" 中触发
+                                    // 不阻塞当前的处理逻辑
+
+
     }
   }
 }

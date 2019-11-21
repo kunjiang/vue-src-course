@@ -16,7 +16,18 @@
     let app = new Vue( {
       el: '#root',
       data: {
-        name: 'jim'
+        name: 'jim',
+        a: {
+          b: {
+            c: 'jim'
+          }
+        }
+      },
+      watch: {
+        // 
+        'a.b.c': function ( o, n ) {
+          console.log( '>>>>', o, n );
+        } 
       }
     } ) ;
 
